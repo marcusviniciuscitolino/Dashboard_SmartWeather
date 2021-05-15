@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['line'] });
+    google.charts.setOnLoadCallback(CarregaDadosUmidade);
+
+    function CarregaDadosUmidade() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetAllStation","DashBoard")?station=humidity",
+            success: function (msg) {
+                drawChart(msg);
+            },
+            error: function (req, status, error) {
+                    alert("Error try again");
+            }
+        });
+    }
+    function drawChart(json) {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Day');
+        var count = 0;
+        $.each(json, function (i, item) {
+            alert(item.Station);
+            data.addColumn('number', item.Station);
+
+        });
+
+        data.addRows([
+            [1, 37.8, 80.8, 41.8, 20, 30, 37.8, 80.8, 41.8, 20, 30],
+            [2, 30.9, 69.5, 32.4, 25, 30, 37.8, 80.8, 41.8, 20, 30],
+            [3, 25.4, 57, 25.7, 30, 30, 37.8, 80.8, 41.8, 20, 30]
+        ]);
+
+        var options = {
+            chart: {
+                title: 'Umidade',
+                subtitle: 'Porcetagem de umidade do ar'
+            },
+            width: 900,
+            height: 500
+        };
+
+        var chart = new google.charts.Line(document.getElementById('line'));
+
+        chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+</script>
+<body style="background-color:black">
+    <button id="submitButton">karalho</button>
+    <div class="form-row">
+        <div class="col-md-12">
+            <div id="btnKralho" class="form-group col-md-2" style="height:70px;width:200px;border-radius:10px;background-color:white;text-align:center;">
+                <label>Umidade</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div id="line"></div>
+    </div>
+</body>
+<script> 
+</script>
+
