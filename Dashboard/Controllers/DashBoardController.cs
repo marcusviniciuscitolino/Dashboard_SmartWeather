@@ -7,15 +7,24 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Dashboard.Controllers
 {
     public class DashBoardController : Controller
     {
+       
         public IActionResult Index()
         {
-            return View();
+            var client = new RestClient(EndPoint.ServerHelix);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Accept", "application/json");
+            request.AddHeader("fiware-service", "helixiot");
+            request.AddHeader("fiware-servicepath", "/");
+            IRestResponse<List<Class1>> response = client.Execute<List<Class1>>(request);
+            return View(response.Data);
         }
         public JsonResult GetAllStation(string station)
         {

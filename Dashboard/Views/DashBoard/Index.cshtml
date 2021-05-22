@@ -1,68 +1,61 @@
-﻿
+﻿@model List<Class1>
 @{
     ViewData["Title"] = "Index";
 }
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-    google.charts.load('current', { 'packages': ['line'] });
-    google.charts.setOnLoadCallback(CarregaDadosUmidade);
-
-    function CarregaDadosUmidade() {
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("GetAllStation","DashBoard")?station=humidity",
-            success: function (msg) {
-                drawChart(msg);
-            },
-            error: function (req, status, error) {
-                    alert("Error try again");
-            }
-        });
+<style>
+    .divPrincipal{
+        height:100px;
+        border-radius: 15px;
+        background-color:forestgreen
     }
-    function drawChart(json) {
 
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Day');
-        var count = 0;
-        $.each(json, function (i, item) {
-            alert(item.Station);
-            data.addColumn('number', item.Station);
-
-        });
-
-        data.addRows([
-            [1, 37.8, 80.8, 41.8, 20, 30, 37.8, 80.8, 41.8, 20, 30],
-            [2, 30.9, 69.5, 32.4, 25, 30, 37.8, 80.8, 41.8, 20, 30],
-            [3, 25.4, 57, 25.7, 30, 30, 37.8, 80.8, 41.8, 20, 30]
-        ]);
-
-        var options = {
-            chart: {
-                title: 'Umidade',
-                subtitle: 'Porcetagem de umidade do ar'
-            },
-            width: 900,
-            height: 500
-        };
-
-        var chart = new google.charts.Line(document.getElementById('line'));
-
-        chart.draw(data, google.charts.Line.convertOptions(options));
+    .divSecundaria {
+        margin-top:10px;
+        height: 70px;
+        border-radius: 15px;
+        background-color:white;
     }
-</script>
-<body style="background-color:black">
-    <button id="submitButton">karalho</button>
-    <div class="form-row">
-        <div class="col-md-12">
-            <div id="btnKralho" class="form-group col-md-2" style="height:70px;width:200px;border-radius:10px;background-color:white;text-align:center;">
-                <label>Umidade</label>
-            </div>
-        </div>
-    </div>
-    <div class="form-row">
-        <div id="line"></div>
-    </div>
-</body>
-<script> 
-</script>
+</style>
+<div class="form-row form-group col-md-12">
+    @foreach (var obj in Model)
+    {
+    <div class="form-row divPrincipal col-md-12">
+        <div>@obj.id</div>
+        @if (obj.humidity != null)
+        {
+            <div class="col-md-1 form-group divSecundaria"><label style="text-align:center">Umidade</label><label style="text-align:center;margin-top:10%;margin-left:40%">@obj.humidity.value</label> </div>
 
+        }
+        @if (obj.ground_humidity != null)
+        {
+            <div class="col-md-1 form-group divSecundaria">@obj.ground_humidity.value</div>
+
+        }
+        @if (obj.luminosity != null)
+        {
+            <div class="col-md-1 form-group divSecundaria">@obj.luminosity.value</div>
+
+        }
+        @if (obj.pressure != null)
+        {
+            <div class="col-md-1 form-group divSecundaria">@obj.pressure.value</div>
+
+        }
+        @if (obj.rain_mm != null)
+        {
+            <div class="col-md-1 form-group divSecundaria">@obj.rain_mm.value</div>
+
+        }
+        @if (obj.temperature != null)
+        {
+            <div class="col-md-1 form-group divSecundaria">@obj.temperature.value</div>
+
+        }
+        @if (obj.wind_speed != null)
+        {
+            <div class="col-md-1 form-group divSecundaria">@obj.wind_speed.value</div>
+
+        }
+    </div>
+    }
+</div>
