@@ -1,6 +1,7 @@
 ﻿using Dashboard.Models;
 using Dashboard.Models.Static;
 using javax.jws;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using System;
@@ -14,9 +15,10 @@ namespace Dashboard.Controllers
 {
     public class DashBoardController : Controller
     {
-       
         public IActionResult Index()
         {
+            if(string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                RedirectToAction("Index","Login");
             var client = new RestClient(EndPoint.ServerHelix);
             client.Timeout = -1;
             var request = new RestRequest(Method.GET);
