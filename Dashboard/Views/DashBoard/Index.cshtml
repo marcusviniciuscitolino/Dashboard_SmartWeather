@@ -3,59 +3,160 @@
     ViewData["Title"] = "Index";
 }
 <style>
-    .divPrincipal{
-        height:100px;
-        border-radius: 15px;
-        background-color:forestgreen
+    #container-principal {
+        display: flex;
+        align-items: center;
+        flex-flow: row wrap;
+        align-items: center;
     }
 
-    .divSecundaria {
-        margin-top:10px;
-        height: 70px;
-        border-radius: 15px;
-        background-color:white;
+    .divPrincipal {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        padding: 0 10px 20px 10px;
+        margin: 0 15px 0 10px;
+    }
+
+    .divSecundaria{
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+    }
+
+    .data {
+        padding: 0 18px;
+        display: flex;
+        background-color: white;
+        overflow: hidden;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid black;
+        margin-top: 20px;
+    }
+
+    .separator {
+        width: 100%;
+        border: 0.5px solid black;
+    }
+
+    .flip-card {
+        background-color: transparent;
+        width: 300px;
+        height: 350px;
+        perspective: 1000px;
+    }
+
+    .flip-card-inner {
+        position: relative;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+
+
+    .flip-card-front, .flip-card-back {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .flip-card-back {
+        background-color: #2980b9;
+        transform: rotateY(180deg);
+    }
+
+    .btn-dashs{
+        margin-top: 5px;
+        width: 100%;
     }
 </style>
-<div class="form-row form-group col-md-12">
+<div  id="container-principal">
     @foreach (var obj in Model)
     {
-    <div class="form-row divPrincipal col-md-12">
-        <div>@obj.id</div>
-        @if (obj.humidity != null)
-        {
-            <div class="col-md-1 form-group divSecundaria"><label style="text-align:center">Umidade</label><label style="text-align:center;margin-top:10%;margin-left:40%">@obj.humidity.value</label> </div>
+    <div class="divPrincipal flip-card">
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                <img src="~/img/mobile.png" style="width:250px; width:250px" />
+                
+                <hr class="separator" />
+                <h6><b>@obj.id</b></h6>
+            </div>
 
-        }
-        @if (obj.ground_humidity != null)
-        {
-            <div class="col-md-1 form-group divSecundaria">@obj.ground_humidity.value</div>
+            <div class="flip-card-back">
+                <div class="data">
+                    @if (obj.humidity != null)
+                    {
+                        <div class="divSecundaria">
+                            <label style="text-align:center; margin-right: 5px;"><b>Umidade: </b></label>
+                            <label style="text-align:center">@obj.humidity.value</label>
+                        </div>
+                    }
+                    @if (obj.ground_humidity != null)
+                    {
 
-        }
-        @if (obj.luminosity != null)
-        {
-            <div class="col-md-1 form-group divSecundaria">@obj.luminosity.value</div>
+                        <div class="divSecundaria">
+                            <label style="text-align:center; margin-right: 5px;"><b>Umidade do Solo: </b></label>
+                            <label>@obj.ground_humidity.value</label>
+                        </div>
 
-        }
-        @if (obj.pressure != null)
-        {
-            <div class="col-md-1 form-group divSecundaria">@obj.pressure.value</div>
+                    }
+                    @if (obj.luminosity != null)
+                    {
+                        <div class="divSecundaria">
+                            <label style="text-align:center; margin-right: 5px;"><b>Luminosidade: </b></label>
+                            <label>@obj.luminosity.value</label>
+                        </div>
 
-        }
-        @if (obj.rain_mm != null)
-        {
-            <div class="col-md-1 form-group divSecundaria">@obj.rain_mm.value</div>
+                    }
+                    @if (obj.pressure != null)
+                    {
+                        <div class="divSecundaria">
+                            <label style="text-align:center; margin-right: 5px;"><b>Pressão do Ar: </b></label>
+                            <label>@obj.pressure.value</label>
+                        </div>
 
-        }
-        @if (obj.temperature != null)
-        {
-            <div class="col-md-1 form-group divSecundaria">@obj.temperature.value</div>
+                    }
+                    @if (obj.rain_mm != null)
+                    {
+                        <div class="divSecundaria">
+                            <label style="text-align:center; margin-right: 5px;"><b>Volumetria de Chuva: </b></label>
+                            <label>@obj.rain_mm.value</label>
+                        </div>
 
-        }
-        @if (obj.wind_speed != null)
-        {
-            <div class="col-md-1 form-group divSecundaria">@obj.wind_speed.value</div>
+                    }
+                    @if (obj.temperature != null)
+                    {
+                        <div class="divSecundaria">
+                            <label style="text-align:center; margin-right: 5px;"><b>Temperatura: </b></label>
+                            <label>@obj.temperature.value</label>
+                        </div>
 
-        }
+                    }
+                    @if (obj.wind_speed != null)
+                    {
+                        <div class="divSecundaria">
+                            <label style="text-align:center; margin-right: 5px;"><b>Velocidade do Vento: </b></label>
+                            <label>@obj.wind_speed.value</label>
+                        </div>
+
+                    }
+
+                </div>
+                <div class="btn-dashs">
+                    <a asp-controller="DashBoard" asp-action="StationDash" asp-route-idStation="@obj.id" class="btn btn-info">
+                        Ver mais
+                    </a>
+                </div>
+                
+            </div>
+        </div>
     </div>
     }
 </div>

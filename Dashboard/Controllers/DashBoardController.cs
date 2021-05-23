@@ -113,10 +113,13 @@ namespace Dashboard.Controllers
             }
             return models;
         }
-        public IActionResult StationDash()
+        public IActionResult StationDash(string idStation)
         {
+            var splitStation = idStation.Split(':');
+            var newUrl = String.Format("https://localhost:44397/api/StateSensors/GetStation/{0}:{1}", splitStation[2], splitStation[3]);
+
             List<StationModel> models = new List<StationModel>();
-            var client = new RestClient("https://localhost:44397/api/StateSensors/GetStation/station:007_station");
+            var client = new RestClient(newUrl);
             client.Timeout = -1;
             var request = new RestRequest(Method.GET);
             request.AddHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Im1hcmN1cyIsInJvbGUiOiJtYXN0ZXJ1c2VyIiwibmJmIjoxNjIwODcwMDc4LCJleHAiOjE2MjA4NzcyNzgsImlhdCI6MTYyMDg3MDA3OH0.r0QiM1FtO3nwwCKqClPox-72laDsyDTLSFZCWj6P-O4");
