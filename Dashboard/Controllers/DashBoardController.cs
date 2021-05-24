@@ -18,7 +18,7 @@ namespace Dashboard.Controllers
         public IActionResult Index()
         {
             if(string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
-                RedirectToAction("Index","Login");
+                return RedirectToAction("Index","Login");
             var client = new RestClient(EndPoint.ServerHelix);
             client.Timeout = -1;
             var request = new RestRequest(Method.GET);
@@ -116,7 +116,7 @@ namespace Dashboard.Controllers
         public IActionResult StationDash(string idStation)
         {
             var splitStation = idStation.Split(':');
-            var newUrl = String.Format("https://localhost:44397/api/StateSensors/GetStation/{0}:{1}", splitStation[2], splitStation[3]);
+            var newUrl = String.Format("https://localhost:44397/api/StateSensors/GetStation/{0}:{1}_station", splitStation[2], splitStation[3]);
 
             List<StationModel> models = new List<StationModel>();
             var client = new RestClient(newUrl);
