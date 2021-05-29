@@ -17,7 +17,7 @@ namespace Dashboard.Controllers
     {
         public IActionResult Index()
         {
-            if(string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+             if(string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
                 return RedirectToAction("Index","Login");
             var client = new RestClient(EndPoint.ServerHelix);
             client.Timeout = -1;
@@ -92,13 +92,14 @@ namespace Dashboard.Controllers
             }
             return Newtonsoft.Json.JsonConvert.SerializeObject(list);
         }
-        public List<StationModel> ListModel(List<StationModel> data, string sensor)
+        public List<StationModel> ListModel(List<StationModel> data, string sensor, string date)
         {
             List<StationModel> models = new List<StationModel>();
             TimeSpan time = new TimeSpan();
             DateTime LastDate = new DateTime();
-            foreach (var model in data.Where(x => x.attrName == sensor && x.recvTime.Day == 13).OrderBy(x => x.recvTime).ToList())
+            foreach (var model in data.Where(x => x.attrName == sensor && x.recvTime.AddHours(3).ToString("yyyy-MM-dd") == date).OrderBy(x => x.recvTime).ToList())
             {
+                model.recvTime = model.recvTime.AddHours(3);
                 if (LastDate.Year == 1)
                 {
                     LastDate = model.recvTime;
@@ -113,11 +114,13 @@ namespace Dashboard.Controllers
             }
             return models;
         }
-        public IActionResult StationDash(string idStation)
+        public IActionResult StationDash(string idStation, string data)
         {
+            data = string.IsNullOrWhiteSpace(data) ? DateTime.Now.ToString("yyyy-MM-dd"):data;
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                return RedirectToAction("Index", "Login");
             var splitStation = idStation.Split(':');
-            var newUrl = String.Format("https://localhost:44397/api/StateSensors/GetStation/{0}:{1}_station", splitStation[2], splitStation[3]);
-
+            var newUrl = String.Format("{0}StateSensors/GetStation/{1}:{2}_station", EndPoint.Public, splitStation[2], splitStation[3]);
             List<StationModel> models = new List<StationModel>();
             var client = new RestClient(newUrl);
             client.Timeout = -1;
@@ -126,8 +129,11 @@ namespace Dashboard.Controllers
             IRestResponse<List<StationModel>> response = client.Execute<List<StationModel>>(request);
             foreach(string sensor in StaticSensor.sensor)
             {
-                models.AddRange(ListModel(response.Data, sensor));
+                models.AddRange(ListModel(response.Data, sensor,data));
             }
+            TempData["ErroDados"] = models.Count > 0;
+            TempData["idStation"] = idStation;
+            TempData["Data"] = data;
             return View(models);
         }
     }

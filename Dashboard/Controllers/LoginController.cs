@@ -30,7 +30,7 @@ namespace Dashboard.Controllers
                 }
                 else
                 {
-                    ViewBag.error = "Login failed";
+                    TempData["Error"] = "Usuário ou senha incorretos";
                     return RedirectToAction("Index");
                 }
             }

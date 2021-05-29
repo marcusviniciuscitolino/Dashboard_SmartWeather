@@ -1,32 +1,62 @@
 ﻿@model User
 
 @{
+    Layout = null;
     ViewBag.Title = "Login";
 }
-<div class="row justify-content-md-center">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                Login
-            </div>
-            <div class="card-body">
-                @using (Html.BeginForm("Login", "Login", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.username)
-                        @Html.TextBoxFor(m => m.username, "", new { @class = "form-control", @placeholder = "Username" })
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="imagem/png" href="~/img/mobile.png" />
+    <title>Login - Smart Weather</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <style>
+        .container-centralizado {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.password)
-                        @Html.PasswordFor(m => m.password, new { @class = "form-control", @placeholder = "Password" })
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" name="submit" class="btn btn-primary" value="Login"/>
-                    </div>
-                }
+</head>
+<body>
+    <div class="container-centralizado">
+        <div>
+            <img src="~/img/mobile.png" />
+        </div>
+        <div class="col-md-3">
+            <div class="card" id="containerLogin">
+                <div class="card-header">
+                    Login
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.username)
+                            @Html.TextBoxFor(m => m.username, "", new { @class = "form-control", @placeholder = "Username" })
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.password)
+                            @Html.PasswordFor(m => m.password, new { @class = "form-control", @placeholder = "Password" })
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" class="btn btn-primary" value="Login" />
+                        </div>
+                    }
+                    @if (TempData["Error"] !=null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @TempData["Error"].ToString()
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
+</body>

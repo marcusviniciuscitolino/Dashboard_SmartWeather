@@ -1,4 +1,5 @@
 ﻿@{
+    ViewBag.Title = "Dashboard";
     string sera = "";
     string sera2 = "";
     string sera3 = "";
@@ -70,13 +71,34 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', { 'packages': ['line'] });
-        google.charts.setOnLoadCallback(drawChart);
-        google.charts.setOnLoadCallback(drawChart2);
-        google.charts.setOnLoadCallback(drawChart3);
-        google.charts.setOnLoadCallback(drawChart4);
-        google.charts.setOnLoadCallback(drawChart5);
-        google.charts.setOnLoadCallback(drawChart6);
-        google.charts.setOnLoadCallback(drawChart7);
+        @if (Model.Where(x => x.attrName == "humidity").ToList().Count()>0)
+        {
+            @:google.charts.setOnLoadCallback(drawChart);
+        }
+        @if (Model.Where(x => x.attrName == "ground_humidity").ToList().Count()>0)
+        {
+            @:google.charts.setOnLoadCallback(drawChart2);
+        }
+        @if (Model.Where(x => x.attrName == "luminosity").ToList().Count()>0)
+        {
+            @:google.charts.setOnLoadCallback(drawChart3);
+        }
+        @if (Model.Where(x => x.attrName == "pressure").ToList().Count()>0)
+        {
+            @:google.charts.setOnLoadCallback(drawChart4);
+        }
+        @if (Model.Where(x => x.attrName == "rain_mm").ToList().Count()>0)
+        {
+            @:google.charts.setOnLoadCallback(drawChart5);
+        }
+        @if (Model.Where(x => x.attrName == "temperature").ToList().Count()>0)
+        {
+            @:google.charts.setOnLoadCallback(drawChart6);
+        }
+        @if (Model.Where(x => x.attrName == "wind_speed").ToList().Count()>0)
+        {
+            @:google.charts.setOnLoadCallback(drawChart7);
+        }
 
         function drawChart() {
 
@@ -91,7 +113,7 @@
             var options = {
                 chart: {
                     title: 'Umidade do ar',
-                    subtitle: 'Dia 13/05/2021'
+                    subtitle: '@TempData["Data"].ToString()'
                 },
                 width: 500,
                 height: 250,
@@ -125,7 +147,7 @@
             var options = {
                 chart: {
                     title: 'Umidade do solo',
-                    subtitle: 'Dia 13/05/2021'
+                    subtitle: '@TempData["Data"].ToString()'
                 },
                 width: 500,
                 height: 250,
@@ -158,7 +180,7 @@
             var options = {
                 chart: {
                     title: 'Luminosidade',
-                    subtitle: 'Dia 13/05/2021'
+                    subtitle: '@TempData["Data"].ToString()'
                 },
                 width: 500,
                 height: 250,
@@ -191,7 +213,7 @@
             var options = {
                 chart: {
                     title: 'Pressão',
-                    subtitle: 'Dia 13/05/2021'
+                    subtitle: '@TempData["Data"].ToString()'
                 },
                 width: 500,
                 height: 250,
@@ -224,7 +246,7 @@
             var options = {
                 chart: {
                     title: 'Milímetros chuva',
-                    subtitle: 'Dia 13/05/2021'
+                    subtitle: '@TempData["Data"].ToString()'
                 },
                 width: 500,
                 height: 250,
@@ -257,7 +279,7 @@
             var options = {
                 chart: {
                     title: 'Temperatura',
-                    subtitle: 'Dia 13/05/2021'
+                    subtitle: '@TempData["Data"].ToString()'
                 },
                 width: 500,
                 height: 250,
@@ -280,7 +302,7 @@
         function drawChart7() {
 
             var data = new google.visualization.DataTable();
-            data.addColumn('timeofday', 'Dia 13/05/2021');
+            data.addColumn('timeofday', '@TempData["Data"].ToString()');
             data.addColumn('number', 'Estação 7');
 
             data.addRows([
@@ -290,7 +312,7 @@
             var options = {
                 chart: {
                     title: 'Velocidade do vento',
-                    subtitle: 'Dia 13/05/2021'
+                    subtitle: '@TempData["Data"].ToString()'
                 },
                 width: 500,
                 height: 250,
@@ -311,59 +333,107 @@
         }
     </script>
     <style>
-        .container-centralizado{
+        .container-centralizado {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        
-        .lado-a-lado{
-           display: flex;
+
+        .lado-a-lado {
+            display: flex;
         }
 
-        .container-graph{
+        .container-graph {
             margin-right: 10px;
-            padding:20px;
+            padding: 20px;
         }
 
-        .container-graph-style{
+        .container-graph-style {
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
             transition: 0.3s;
         }
     </style>
 </head>
-<div class="container-centralizado">
-    <div class="lado-a-lado">
-        <div class="container-graph container-graph-style form-group">
-            <div id="line_top_x"></div>
-        </div>
-        <div class="container-graph container-graph-style form-group">
-            <div id="line_top_x2"></div>
-        </div>
-        <div class="container-graph container-graph-style form-group">
-            <div id="line_top_x6"></div>
-        </div>
-    </div>
-    <div class="lado-a-lado">
-        <div class="container-graph container-graph-style form-group">
-            <div id="line_top_x4"></div>
-        </div>
-        <div class="container-graph container-graph-style form-group">
-            <div id="line_top_x5"></div>
-        </div>
-        <div class="container-graph container-graph-style form-group">
-            <div id="line_top_x3"></div>
+<div class="form-group col-md-12">
+    @*TempData["ErroDados"] = models.Count > 0;*@
+    @*TempData["idStation"] = idStation;*@
+    @using (Html.BeginForm("StationDash", "DashBoard", FormMethod.Post))
+    {
+    <div class="col-md-2" style="margin-left:71%">
+        <label for="data-pagamento">Data</label>
+        <input type="text" id="idStation" name="idStation" value="@TempData["idStation"].ToString()" hidden />
+        <!-- Datepicker as text field -->
+        <div class="input-group">
+            <input type="date" class="form-control" id="data" value="@TempData["Data"].ToString()" name="data" />
+            <div class="input-group-addon">
+                <input type="submit" name="submit" class="btn btn-primary" value="Buscar" />
+            </div>
         </div>
     </div>
+    }
 </div>
+@if ((bool)TempData["ErroDados"] == true)
+{
+    <div class="container-centralizado">
+        <div class="lado-a-lado">
+            @if (Model.Where(x => x.attrName == "humidity").ToList().Count() > 0)
+            {
+                <div class="container-graph container-graph-style form-group">
+                    <div id="line_top_x"></div>
+                </div>
+            }
+            @if (Model.Where(x => x.attrName == "ground_humidity").ToList().Count() > 0)
+            {
+                <div class="container-graph container-graph-style form-group">
+                    <div id="line_top_x2"></div>
+                </div>
+            }
+            @if (Model.Where(x => x.attrName == "temperature").ToList().Count() > 0)
+            {
+                <div class="container-graph container-graph-style form-group">
+                    <div id="line_top_x6"></div>
+                </div>
+            }
+        </div>
+        <div class="lado-a-lado">
+            @if (Model.Where(x => x.attrName == "pressure").ToList().Count() > 0)
+            {
+                <div class="container-graph container-graph-style form-group">
+                    <div id="line_top_x4"></div>
+                </div>
+            }
+            @if (Model.Where(x => x.attrName == "rain_mm").ToList().Count() > 0)
+            {
+                <div class="container-graph container-graph-style form-group">
+                    <div id="line_top_x5"></div>
+                </div>
+            }
+            @if (Model.Where(x => x.attrName == "luminosity").ToList().Count() > 0)
+            {
+                <div class="container-graph container-graph-style form-group">
+                    <div id="line_top_x3"></div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="container-centralizado">
+        @if (Model.Where(x => x.attrName == "wind_speed").ToList().Count() > 0)
+        {
+            <div class="container-graph container-graph-style form-group">
+                <div id="line_top_x7"></div>
+            </div>
+        }
+        </div>
 
-<div class="container-centralizado">
-    <div class="container-graph container-graph-style form-group">
-        <div id="line_top_x7"></div>
-    </div>    
-</div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        Essa estação não possuí dados para essa data.
+    </div>
+}
 
 @*<body>
                 <div id="line_top_x"></div>
