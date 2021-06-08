@@ -38,7 +38,10 @@ namespace Dashboard.Models
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("application/json", JsonSerializer.Serialize(user), ParameterType.RequestBody);
             return client.Execute<User>(request);
-
+        }
+        public string TokenResp(User user)
+        {
+            return Response(user).Data.Token;
         }
     }
 }

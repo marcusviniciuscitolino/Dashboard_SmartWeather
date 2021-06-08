@@ -116,6 +116,7 @@ namespace Dashboard.Controllers
         }
         public IActionResult StationDash(string idStation, string data)
         {
+            User user = new User();
             data = string.IsNullOrWhiteSpace(data) ? DateTime.Now.ToString("yyyy-MM-dd"):data;
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
                 return RedirectToAction("Index", "Login");
@@ -125,7 +126,7 @@ namespace Dashboard.Controllers
             var client = new RestClient(newUrl);
             client.Timeout = -1;
             var request = new RestRequest(Method.GET);
-            request.AddHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Im1hcmN1cyIsInJvbGUiOiJtYXN0ZXJ1c2VyIiwibmJmIjoxNjIwODcwMDc4LCJleHAiOjE2MjA4NzcyNzgsImlhdCI6MTYyMDg3MDA3OH0.r0QiM1FtO3nwwCKqClPox-72laDsyDTLSFZCWj6P-O4");
+            request.AddHeader("Authorization", string.Format("Bearer {0}",user.TokenResp(new User() {username = HttpContext.Session.GetString("username"), password = HttpContext.Session.GetString("password") })));
             IRestResponse<List<StationModel>> response = client.Execute<List<StationModel>>(request);
             foreach(string sensor in StaticSensor.sensor)
             {
